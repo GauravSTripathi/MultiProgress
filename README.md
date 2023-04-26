@@ -68,7 +68,7 @@ binding.multiProgressTaskOne.setProgress(pair)
 ```
 ## License
 
-Distributed under the MIT License. See [LICENSE](https://github.com//Multi Progress Bar/blob/main/LICENSE.md) for more information.
+Distributed under the MIT License. See https://github.com/git/git-scm.com/blob/main/MIT-LICENSE.txt for more information.
 
 ## Authors
 
