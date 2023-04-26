@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        app:cardBackgroundColor="@color/black"
+        app:cardCornerRadius="@dimen/_4sdp"
+        app:contentPadding="@dimen/_10sdp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="@dimen/_8sdp"
+                        android:layout_height="@dimen/_8sdp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        app:cardBackgroundColor="#0392F3"
+                        app:cardCornerRadius="@dimen/_4sdp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_5sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:text="Task 1"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/_13sdp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="5 hours"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/_13sdp" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <com.gaurav.multiprogressbar.MultiProgressBar
+                    android:id="@+id/multi_progress_task_one"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    app:gst_count="5"
+                    app:gst_data_format="HOUR"
+                    app:gst_end_hour="8"
+                    app:gst_primary_progress_color="#4DD9D9D9"
+                    app:gst_seconder_progress_color="#0392F3"
+                    app:gst_start_hour="23"
+                    app:gst_textColor="@color/white"
+                    app:gst_textSize="20" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="@dimen/_8sdp"
+                        android:layout_height="@dimen/_8sdp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        app:cardBackgroundColor="#8FAADC"
+                        app:cardCornerRadius="@dimen/_4sdp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_5sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:text="Task 2"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/_13sdp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="10 Hours"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/_13sdp" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <com.gaurav.multiprogressbar.MultiProgressBar
+                    android:id="@+id/multi_progress_task_two"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    app:gst_count="5"
+                    app:gst_data_format="HOUR"
+                    app:gst_end_hour="8"
+                    app:gst_primary_progress_color="#4DD9D9D9"
+                    app:gst_seconder_progress_color="#8FAADC"
+                    app:gst_start_hour="20"
+                    app:gst_textColor="@color/white"
+                    app:gst_textSize="20" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_20sdp"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="@dimen/_8sdp"
+                        android:layout_height="@dimen/_8sdp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        app:cardBackgroundColor="#F0B31A"
+                        app:cardCornerRadius="@dimen/_4sdp" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_marginRight="@dimen/_5sdp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:text="Task 3"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/_13sdp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="4 Hours"
+                            android:textColor="#FFFFFF"
+                            android:textSize="@dimen/_13sdp" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <com.gaurav.multiprogressbar.MultiProgressBar
+                    android:id="@+id/multi_progress_task_three"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    app:gst_count="5"
+                    app:gst_data_format="HOUR"
+                    app:gst_end_hour="20"
+                    app:gst_primary_progress_color="#4DD9D9D9"
+                    app:gst_seconder_progress_color="#F0B31A"
+                    app:gst_start_hour="8"
+                    app:gst_textColor="@color/white"
+                    app:gst_textSize="20" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+</RelativeLayout>

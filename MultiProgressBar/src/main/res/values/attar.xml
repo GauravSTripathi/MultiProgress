@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MultiProgressBar">
+        <attr name="gst_count" format="integer" />
+        <attr name="gst_segmentAlpha" format="float" />
+        <attr name="gst_progressAlpha" format="float" />
+        <attr name="gst_textSize" format="float"/>
+
+        <attr name="gst_textColor" format="color"/>
+        <attr name="gst_seconder_progress_color" format="color" />
+        <attr name="gst_primary_progress_color" format="color" />
+
+        <attr name="gst_spacing" format="dimension" />
+        <attr name="gst_duration" format="integer" />
+        <attr name="gst_start_hour" format="float" />
+        <attr name="gst_end_hour" format="float" />
+<!--        <attr name="android:fontFamily" />-->
+        <attr name="gst_data_format" format="enum" >
+            <enum name="HOUR" value="0"/>
+            <enum name="NUMBER" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>
