@@ -14,6 +14,7 @@
         <attr name="gst_duration" format="integer" />
         <attr name="gst_start_hour" format="float" />
         <attr name="gst_end_hour" format="float" />
+        <attr name="gst_progress_radius" format="float" />
 <!--        <attr name="android:fontFamily" />-->
         <attr name="gst_data_format" format="enum" >
             <enum name="HOUR" value="0"/>
