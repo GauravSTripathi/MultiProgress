@@ -7,7 +7,6 @@ import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
-import androidx.core.graphics.PathSegment
 import androidx.core.view.doOnLayout
 
 class MultiProgressBar @JvmOverloads constructor(
@@ -27,6 +26,13 @@ class MultiProgressBar @JvmOverloads constructor(
     private var textSegmentsWidth = 1
     private var startHour = 0F
     private var endHour = 10F
+    var progress_radius : Float = 10F
+        set(value) {
+            if (field != value) {
+                field = value
+                invalidate()
+            }
+        }
 
     @get:ColorInt
     var seconderProgressColor: Int = Color.GREEN
@@ -54,7 +60,6 @@ class MultiProgressBar @JvmOverloads constructor(
             }
         }
 
-
     @FloatRange(from = 0.0, to = 1.0)
     var segmentAlpha: Float = 1f
         set(value) {
@@ -79,10 +84,6 @@ class MultiProgressBar @JvmOverloads constructor(
 
     var progressInterpolator: LinearInterpolator = LinearInterpolator()
 
-    var progress: Int = 0
-        private set
-
-
     private val segmentPaints: MutableList<Paint> = mutableListOf()
     private val segmentPaths: MutableList<Path> = mutableListOf()
 
@@ -92,6 +93,7 @@ class MultiProgressBar @JvmOverloads constructor(
             segmentCount = getInteger(R.styleable.MultiProgressBar_gst_count, segmentCount)
             startHour = getFloat(R.styleable.MultiProgressBar_gst_start_hour, startHour)
             endHour = getFloat(R.styleable.MultiProgressBar_gst_end_hour, endHour)
+            progress_radius = getFloat(R.styleable.MultiProgressBar_gst_progress_radius,progress_radius)
 
             segmentAlpha = getFloat(R.styleable.MultiProgressBar_gst_segmentAlpha, segmentAlpha)
             progressAlpha = getFloat(R.styleable.MultiProgressBar_gst_progressAlpha, progressAlpha)
@@ -111,17 +113,11 @@ class MultiProgressBar @JvmOverloads constructor(
                 progressDuration.toInt()
             ).toLong()
 
-//            val fontFamilyId: Int = this.getResourceId(R.styleable.MultiProgressBar_android_fontFamily, 0)
-
             dataFormat = this.getInt(R.styleable.MultiProgressBar_gst_data_format, dataFormat)
 
             textPaint.setColor(textColor)
             textPaint.textSize = textSize
             textPaint.isAntiAlias = true
-//            if (fontFamilyId > 0) {
-//                textPaint.typeface = ResourcesCompat.getFont(getContext(), fontFamilyId)
-//            }
-
 
             seconderProgressPaint.setColor(seconderProgressColor)
             seconderProgressPaint.isAntiAlias = true
@@ -141,13 +137,37 @@ class MultiProgressBar @JvmOverloads constructor(
 
     }
 
+    fun setHours(sleepStartHour:Float,sleepEndHour:Float)
+    {
+        startHour=sleepStartHour
+        endHour=sleepEndHour
+    }
 
     fun setProgress(progress: ArrayList<Pair<Float, Float>>) {
+        if (endHour<startHour)
+        {
+            endHour = 24 + endHour
+        }
+
+        var isNightSleep = progress.filter { it.second < it.first }
+
+        if (isNightSleep!=null && isNightSleep.size>0) {
+            progress.forEachIndexed { index, item ->
+
+                if (item.first >= startHour) {
+                    progress.set(index, Pair(item.first - 24, progress[index].second))
+//                newPair.first = item.first - 24
+                }
+                if (item.second >= startHour) {
+                    progress.set(index, Pair(progress[index].first, item.second - 24))
+                }
+            }
+        }
+
         doOnLayout {
             ProgressRectF = ArrayList()
             (0 until progress.size).forEach {
                 ProgressRectF.add(getProgressRect(progress.get(it)))
-//            canvas.drawRoundRect(540F, 5F, w, (h * 0.25F ), 50F, 50F, seconderProgressPaint)
             }
             invalidate()
         }
@@ -158,11 +178,6 @@ class MultiProgressBar @JvmOverloads constructor(
         var rectF: RectF
         w = width.toFloat()
         h = height.toFloat()
-//        if (pair.first < startHour || pair.first > endHour) {
-//            throw  java.lang.Exception("range should be between the start and end hour")
-//        } else if (pair.second < startHour || pair.second > endHour) {
-//            throw  java.lang.Exception("range should be between the start and end hour")
-//        } else {
 
         var first = pair.first
         var second = pair.second
@@ -180,18 +195,18 @@ class MultiProgressBar @JvmOverloads constructor(
     }
 
 
-    fun generateHours(startHour: Float, endHour: Float, segment: Int): ArrayList<Int> {
+    fun generateHours(startHour: Float, endHour: Float, segment: Int): MutableList<Int> {
 
         val range: Int = Math.abs(startHour - endHour).toInt() // calculate the range
 
-        val interval = range / 4 // calculate the interval size
+        val interval = range / segment // calculate the interval size
 
-        val numbers = arrayListOf<Int>() // create an array to store the 5 numbers
+        val numbers = arrayListOf<Int>() // create an array to store the segments
 
 
         numbers.add((startHour + interval).toInt()) // calculate the first number
-        for (i in 1..5) {
-            numbers.add(numbers.get(i - 1) + interval) // calculate the remaining 4 numbers
+        for (i in 1..segment) {
+            numbers.add(numbers.get(i - 1) + interval) // calculate the remaining segments
         }
 
         return numbers
@@ -247,40 +262,42 @@ class MultiProgressBar @JvmOverloads constructor(
 
 
             if (segmentCount > 2) {
-                val generateHours = generateHours(startHour, endHour, segmentCount)
-                (0 until generateHours.size -1).forEach {
-
-                    canvas.drawLine(
-                        ((generateHours.get(it) - startHour) / (endHour - startHour)) * w,
-                        h * 0.40F,
-                        ((generateHours.get(it) - startHour) / (endHour - startHour)) * w,
-                        h - textSize,
-                        textPaint
-                    )
-
-                    hours = generateHours.get(it)
-                    if (generateHours.get(it) > 23) {
-                        hours = Math.abs(24 - generateHours.get(it))
+                var generateHoursSegment = generateHours(startHour, endHour, segmentCount)
+                (0 until generateHoursSegment.size).forEach {
+                    hours = generateHoursSegment.get(it)
+                    if (generateHoursSegment.get(it) > 23) {
+                        hours = Math.abs(24 - generateHoursSegment.get(it))
                     }
 
-                    canvas.drawText(
-                        hours.toString() + ":00",
-                        ((generateHours.get(it) - startHour) / (endHour - startHour)) * w - textSize ,
-                        h,
-                        textPaint
-                    )
+                    var actualEndHour = if(endHour > 23) {
+                        endHour.toInt()-24
+                    }else{
+                        endHour
+                    }
 
+                    if(hours!=actualEndHour){
+                        canvas.drawLine(
+                            ((generateHoursSegment.get(it) - startHour) / (endHour - startHour)) * w,
+                            h * 0.40F,
+                            ((generateHoursSegment.get(it) - startHour) / (endHour - startHour)) * w,
+                            h - textSize,
+                            textPaint
+                        )
 
+                        canvas.drawText(
+                            hours.toString() + ":00",
+                            ((generateHoursSegment.get(it) - startHour) / (endHour - startHour)) * w - textSize ,
+                            h,
+                            textPaint
+                        )
+                    }
                 }
 
             }
-
-
             canvas.drawRoundRect(5F, 5F, w, h * 0.40F, 50F, 50F, primaryProgressPaint)
-
             ProgressRectF?.let {
                 (0 until it.size).forEach { index ->
-                    canvas.drawRoundRect(it.get(index), 50F, 50F, seconderProgressPaint)
+                    canvas.drawRoundRect(it.get(index), progress_radius, progress_radius, seconderProgressPaint)
                 }
 
             }
@@ -288,42 +305,5 @@ class MultiProgressBar @JvmOverloads constructor(
 
         }
 
-
-//
-//
-//
-//        canvas.drawRoundRect(5F, 5F, 105F, (h * 0.25F), 50F, 50F, seconderProgressPaint)
-//        canvas.drawRoundRect(205F, 5F, 405F, (h * 0.25F), 50F, 50F, seconderProgressPaint)
-//
-//        canvas.drawRoundRect(450F, 5F, 525F, (h * 0.25F), 50F, 50F, seconderProgressPaint)
-//
-//        canvas.drawRoundRect(550F, 5F, w, (h * 0.25F), 50F, 50F, seconderProgressPaint)
-
-
-//        (0 until segmentCount).forEach { position ->
-//            val path = segmentPaths[position]
-//            val paint = segmentPaints[position]
-//            val segmentCoordinates =
-//                segmentCoordinatesComputer.segmentCoordinates(
-//                    position,
-//                    segmentCount,
-//                    w,
-//                    h * 0.5F,
-//                    spacing
-//                )
-//
-//            drawSegment(canvas, path, paint, segmentCoordinates, segmentColor, segmentAlpha)
-//        }
-//
-//        animatedProgressSegmentCoordinates?.let {
-//            drawSegment(
-//                canvas,
-//                progressPath,
-//                progressPaint,
-//                it,
-//                progressColor,
-//                progressAlpha
-//            )
-//        }
     }
 }

@@ -75,7 +75,7 @@
                     app:gst_seconder_progress_color="#0392F3"
                     app:gst_start_hour="23"
                     app:gst_textColor="@color/white"
-                    app:gst_textSize="20" />
+                    app:gst_textSize="15" />
             </LinearLayout>
 
 
@@ -135,7 +135,7 @@
                     app:gst_seconder_progress_color="#8FAADC"
                     app:gst_start_hour="20"
                     app:gst_textColor="@color/white"
-                    app:gst_textSize="20" />
+                    app:gst_textSize="15" />
             </LinearLayout>
 
 
@@ -195,7 +195,7 @@
                     app:gst_seconder_progress_color="#F0B31A"
                     app:gst_start_hour="8"
                     app:gst_textColor="@color/white"
-                    app:gst_textSize="20" />
+                    app:gst_textSize="15" />
             </LinearLayout>
 
         </LinearLayout>
