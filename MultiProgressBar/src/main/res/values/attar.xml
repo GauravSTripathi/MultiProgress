@@ -21,4 +21,25 @@
             <enum name="NUMBER" value="1"/>
         </attr>
     </declare-styleable>
+    <declare-styleable name="TimeLineView">
+        <attr name="tlv_progressAlpha" format="float" />
+        <attr name="tlv_textSize" format="float"/>
+
+        <attr name="tlv_textColor" format="color"/>
+        <attr name="tlv_seconder_progress_color" format="color" />
+        <attr name="tlv_primary_progress_color" format="color" />
+
+        <attr name="tlv_start_time_in_milli" format="string" />
+        <attr name="tlv_end_time_in_milli" format="string" />
+        <attr name="tlv_progress_radius" format="float" />
+        <attr name="tlv_showHours" format="boolean" />
+        <attr name="tlv_is24Hours" format="boolean" />
+        <attr name="tlv_startTimeDisplay" format="string" />
+        <attr name="tlv_endTimeDisplay" format="string" />
+        <!--        <attr name="android:fontFamily" />-->
+        <attr name="tlv_data_format" format="enum" >
+            <enum name="HOUR" value="0"/>
+            <enum name="NUMBER" value="1"/>
+        </attr>
+    </declare-styleable>
 </resources>

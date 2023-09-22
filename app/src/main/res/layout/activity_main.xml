@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_12sdp"
@@ -63,19 +64,35 @@
 
                 </LinearLayout>
 
-                <com.gaurav.multiprogressbar.MultiProgressBar
-                    android:id="@+id/multi_progress_task_one"
+<!--                <com.gaurav.multiprogressbar.MultiProgressBar-->
+<!--                    android:id="@+id/multi_progress_task_one"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="@dimen/_40sdp"-->
+<!--                    android:layout_margin="@dimen/_5sdp"-->
+<!--                    app:gst_count="2"-->
+<!--                    app:gst_data_format="HOUR"-->
+<!--                    app:gst_end_hour="8"-->
+<!--                    app:gst_primary_progress_color="#4DD9D9D9"-->
+<!--                    app:gst_seconder_progress_color="#0392F3"-->
+<!--                    app:gst_start_hour="23"-->
+<!--                    app:gst_textColor="@color/white"-->
+<!--                    app:gst_textSize="15" />-->
+
+
+                <com.gaurav.multiprogressbar.TimeLineView
+                    android:id="@+id/time_line_view_one"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
                     android:layout_margin="@dimen/_5sdp"
-                    app:gst_count="5"
-                    app:gst_data_format="HOUR"
-                    app:gst_end_hour="8"
-                    app:gst_primary_progress_color="#4DD9D9D9"
-                    app:gst_seconder_progress_color="#0392F3"
-                    app:gst_start_hour="23"
+                    app:tlv_data_format="HOUR"
+                    app:tlv_end_time_in_milli="0"
+                    app:tlv_primary_progress_color="#4DD9D9D9"
+                    app:tlv_seconder_progress_color="#0392F3"
+                    app:tlv_start_time_in_milli="0"
                     app:gst_textColor="@color/white"
                     app:gst_textSize="15" />
+
+
             </LinearLayout>
 
 
@@ -128,7 +145,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
                     android:layout_margin="@dimen/_5sdp"
-                    app:gst_count="5"
+                    app:gst_count="2"
                     app:gst_data_format="HOUR"
                     app:gst_end_hour="8"
                     app:gst_primary_progress_color="#4DD9D9D9"
@@ -188,7 +205,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
                     android:layout_margin="@dimen/_5sdp"
-                    app:gst_count="5"
+                    app:gst_count="2"
                     app:gst_data_format="HOUR"
                     app:gst_end_hour="20"
                     app:gst_primary_progress_color="#4DD9D9D9"
@@ -202,5 +219,13 @@
 
 
     </com.google.android.material.card.MaterialCardView>
+
+    <Button
+        android:id="@+id/btn_genrate"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:text="Draw progress"
+        android:layout_below="@id/card_view"/>
+
 
 </RelativeLayout>

@@ -8,14 +8,22 @@ import android.view.animation.LinearInterpolator
 import androidx.annotation.ColorInt
 import androidx.annotation.FloatRange
 import androidx.core.view.doOnLayout
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
+
 
 class MultiProgressBar @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-    private var w=0F
-    private var h=0F
+    private var w = 0F
+    private var h = 0F
     private var dataFormat = 0
     private var ProgressRectF = java.util.ArrayList<RectF>()
     private var seconderProgressPaint = Paint()
@@ -26,7 +34,7 @@ class MultiProgressBar @JvmOverloads constructor(
     private var textSegmentsWidth = 1
     private var startHour = 0F
     private var endHour = 10F
-    var progress_radius : Float = 10F
+    var progress_radius: Float = 10F
         set(value) {
             if (field != value) {
                 field = value
@@ -52,6 +60,40 @@ class MultiProgressBar @JvmOverloads constructor(
             }
         }
 
+
+    var showHours: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                invalidate()
+            }
+        }
+
+    var startTimeDisplay: String = ""
+        set(value) {
+            if (field != value) {
+                field = value
+                invalidate()
+            }
+        }
+
+
+    var endTimeDisplay: String = ""
+        set(value) {
+            if (field != value) {
+                field = value
+                invalidate()
+            }
+        }
+
+
+    var is24Hour: Boolean = true
+        set(value) {
+            if (field != value) {
+                field = value
+                invalidate()
+            }
+        }
     var spacing: Float = 0f
         set(value) {
             if (field != value) {
@@ -93,7 +135,8 @@ class MultiProgressBar @JvmOverloads constructor(
             segmentCount = getInteger(R.styleable.MultiProgressBar_gst_count, segmentCount)
             startHour = getFloat(R.styleable.MultiProgressBar_gst_start_hour, startHour)
             endHour = getFloat(R.styleable.MultiProgressBar_gst_end_hour, endHour)
-            progress_radius = getFloat(R.styleable.MultiProgressBar_gst_progress_radius,progress_radius)
+            progress_radius =
+                getFloat(R.styleable.MultiProgressBar_gst_progress_radius, progress_radius)
 
             segmentAlpha = getFloat(R.styleable.MultiProgressBar_gst_segmentAlpha, segmentAlpha)
             progressAlpha = getFloat(R.styleable.MultiProgressBar_gst_progressAlpha, progressAlpha)
@@ -128,8 +171,7 @@ class MultiProgressBar @JvmOverloads constructor(
             primaryProgressPaint.isAntiAlias = true
             primaryProgressPaint.style = Paint.Style.FILL
 
-            if (endHour<startHour)
-            {
+            if (endHour < startHour) {
                 endHour = 24 + endHour
             }
             recycle()
@@ -137,21 +179,20 @@ class MultiProgressBar @JvmOverloads constructor(
 
     }
 
-    fun setHours(sleepStartHour:Float,sleepEndHour:Float)
-    {
-        startHour=sleepStartHour
-        endHour=sleepEndHour
+    fun setHours(sleepStartHour: Float, sleepEndHour: Float) {
+        startHour = sleepStartHour
+        endHour = sleepEndHour
+        invalidate()
     }
 
     fun setProgress(progress: ArrayList<Pair<Float, Float>>) {
-        if (endHour<startHour)
-        {
+        if (endHour < startHour) {
             endHour = 24 + endHour
         }
 
         var isNightSleep = progress.filter { it.second < it.first }
 
-        if (isNightSleep!=null && isNightSleep.size>0) {
+        if (isNightSleep != null && isNightSleep.size > 0) {
             progress.forEachIndexed { index, item ->
 
                 if (item.first >= startHour) {
@@ -181,15 +222,14 @@ class MultiProgressBar @JvmOverloads constructor(
 
         var first = pair.first
         var second = pair.second
-        if(endHour>23)
-        {
-            first +=24
-            second +=24
+        if (endHour > 23) {
+            first += 24
+            second += 24
         }
 
-            val left = ((first - startHour) / (endHour - startHour)) * w
-            val right = ((second - startHour) / (endHour - startHour)) * w
-            rectF = RectF(left, 5F, right, (h * 0.40F))
+        val left = ((first - startHour) / (endHour - startHour)) * w
+        val right = ((second - startHour) / (endHour - startHour)) * w
+        rectF = RectF(left, 5F, right, (h * 0.40F))
 //        }
         return rectF
     }
@@ -225,40 +265,101 @@ class MultiProgressBar @JvmOverloads constructor(
 
 
             var hours = 0
-            canvas.drawText(
-                startHour.toInt().toString() + ":00",
-                0F,
-                h,
-                textPaint
-            )
+            if (showHours) {
+                val formatter: NumberFormat = DecimalFormat("00")
+                if(is24Hour)
+                {
+                    canvas.drawText(
+                        startHour.toInt().toString() + ":00",
+                        0F,
+                        h,
+                        textPaint
+                    )
+                }else{
+                    var hourText=""
 
-            canvas.drawLine(
-                0F + textSize,
-                h * 0.40F,
-                0F + textSize,
-                h - textSize,
-                textPaint
-            )
-            hours = endHour.toInt()
+                    var hour = startHour.toInt()
+                    var mins =(( startHour - hour ) *60).toInt()
 
-            if (hours > 23) {
-                hours = Math.abs(24 - endHour).toInt()
+                    var displayTime = getFormatedDateFromUtc("$hour:$mins")
+
+//                    if( getLocalTime(hour,mins).first<12)
+//                    {
+//                        hourText = "${formatter.format( getLocalTime(hour,mins).first)}:${formatter.format( getLocalTime(hour,mins).second)} AM"
+//                    }else{
+//
+//                        hourText = "${formatter.format(12-(24- getLocalTime(hour,mins).first))}:${formatter.format( getLocalTime(hour,mins).second)} PM"
+//                    }
+                    canvas.drawText(
+                        if(!startTimeDisplay.isNullOrEmpty()) {startTimeDisplay}else{displayTime},
+                        0F,
+                        h,
+                        textPaint
+                    )
+                }
+
+
+                canvas.drawLine(
+                    0F + textSize,
+                    h * 0.40F,
+                    0F + textSize,
+                    h - textSize,
+                    textPaint
+                )
+                hours = endHour.toInt()
+
+                if (hours > 23) {
+                    hours = Math.abs(24 - endHour).toInt()
+                }
+
+
+                if(is24Hour)
+                {
+                    canvas.drawText(
+                        hours.toInt().toString() + ":00",
+                        0F,
+                        h,
+                        textPaint
+                    )
+                }else{
+                    var hourText=""
+                    var hour = hours.toInt()
+                    var mins =(( endHour - endHour.toInt() ) *60).toInt()
+
+
+                    var displayTime = getFormatedDateFromUtc("$hour:$mins")
+
+//                    if( getLocalTime(hour,mins).first<12)
+//                    {
+//                        hourText = "${formatter.format( getLocalTime(hour,mins).first)}:${formatter.format( getLocalTime(hour,mins).second)} AM"
+//                    }else{
+//                        hourText = "${formatter.format(12 - (24- getLocalTime(hour,mins).first))}:${formatter.format( getLocalTime(hour,mins).second)} PM"
+//                    }
+                    canvas.drawText(
+                        if(!endTimeDisplay.isNullOrEmpty()) {endTimeDisplay}else{displayTime},
+                        w-(displayTime.length*12),
+                        h,
+                        textPaint
+                    )
+                }
+
+
+//                canvas.drawText(
+//                    hours.toString() + ":00",
+//                    w - (textSize * 2),
+//                    h,
+//                    textPaint
+//                )
+
+                canvas.drawLine(
+                    w - textSize,
+                    h * 0.40F,
+                    w - textSize,
+                    h - textSize,
+                    textPaint
+                )
             }
 
-            canvas.drawText(
-                hours.toString() + ":00",
-                w - (textSize*2),
-                h,
-                textPaint
-            )
-
-            canvas.drawLine(
-                w - textSize,
-                h * 0.40F,
-                w - textSize,
-                h - textSize,
-                textPaint
-            )
 
 
             if (segmentCount > 2) {
@@ -269,27 +370,28 @@ class MultiProgressBar @JvmOverloads constructor(
                         hours = Math.abs(24 - generateHoursSegment.get(it))
                     }
 
-                    var actualEndHour = if(endHour > 23) {
-                        endHour.toInt()-24
-                    }else{
+                    var actualEndHour = if (endHour > 23) {
+                        endHour.toInt() - 24
+                    } else {
                         endHour
                     }
+                    if (showHours) {
+                        if (hours != actualEndHour) {
+                            canvas.drawLine(
+                                ((generateHoursSegment.get(it) - startHour) / (endHour - startHour)) * w,
+                                h * 0.40F,
+                                ((generateHoursSegment.get(it) - startHour) / (endHour - startHour)) * w,
+                                h - textSize,
+                                textPaint
+                            )
 
-                    if(hours!=actualEndHour){
-                        canvas.drawLine(
-                            ((generateHoursSegment.get(it) - startHour) / (endHour - startHour)) * w,
-                            h * 0.40F,
-                            ((generateHoursSegment.get(it) - startHour) / (endHour - startHour)) * w,
-                            h - textSize,
-                            textPaint
-                        )
-
-                        canvas.drawText(
-                            hours.toString() + ":00",
-                            ((generateHoursSegment.get(it) - startHour) / (endHour - startHour)) * w - textSize ,
-                            h,
-                            textPaint
-                        )
+                            canvas.drawText(
+                                hours.toString() + ":00",
+                                ((generateHoursSegment.get(it) - startHour) / (endHour - startHour)) * w - textSize,
+                                h,
+                                textPaint
+                            )
+                        }
                     }
                 }
 
@@ -297,7 +399,12 @@ class MultiProgressBar @JvmOverloads constructor(
             canvas.drawRoundRect(5F, 5F, w, h * 0.40F, 50F, 50F, primaryProgressPaint)
             ProgressRectF?.let {
                 (0 until it.size).forEach { index ->
-                    canvas.drawRoundRect(it.get(index), progress_radius, progress_radius, seconderProgressPaint)
+                    canvas.drawRoundRect(
+                        it.get(index),
+                        progress_radius,
+                        progress_radius,
+                        seconderProgressPaint
+                    )
                 }
 
             }
@@ -306,4 +413,30 @@ class MultiProgressBar @JvmOverloads constructor(
         }
 
     }
+
+
+    fun getFormatedDateFromUtc(
+        date: String
+    ): String {
+        var providedDate= date
+        val input = SimpleDateFormat("HH:mm")
+        input.timeZone = TimeZone.getTimeZone("UTC")
+        val output = SimpleDateFormat("hh:mm a", Locale.getDefault())
+        output.setTimeZone(TimeZone.getDefault());
+        var Stringdate = ""
+        try {
+            if(providedDate.count { it==':' }>1)
+            {
+                providedDate = providedDate.substring(0,providedDate.lastIndexOf(':'))
+            }
+            val inputDate: Date = input.parse(providedDate) // parse input
+            Stringdate = output.format(inputDate)
+
+        } catch (e: ParseException) {
+            e.printStackTrace()
+        }
+        return Stringdate
+    }
+
+
 }
